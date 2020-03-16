@@ -1,0 +1,30 @@
+		LDX#0
+POLL_KEYBD:		INB $000	;keyb status
+		NOP
+		JGE POLL_KEYBD
+		INB $001	;keyb data
+		STC DUMP
+		ADX# 1
+		LDA# 9
+		CMA# STR_LEN
+		JGT POLL_KEYBD
+		PSHX
+		LDX# -1
+CHECKMORE:		ADX# 1
+		CMX# 9
+		JEQ END
+		LDC DUMP
+		STA COMPBOY
+		LDC PSWD
+		CMA COMPBOY
+		JEQ CHECKMORE
+		POPX
+		JMP POLL_KEYBD
+END: 		
+
+
+
+COMPBOY: 	.EQU ''
+PSWD: 	.CHAR, 'get pwned'
+	.EQU @, $D00
+DUMP:	.CHAR  '', STR_LEN
